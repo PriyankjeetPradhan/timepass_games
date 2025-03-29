@@ -49,11 +49,12 @@ export const getAllGames = async (req: Request, res: Response) => {
             where: search
             ? {
                   OR: [
-                  { name: { contains: search, mode: "insensitive" } },
-                  { author: { contains: search, mode: "insensitive" } },
+                    { name: { contains: search, mode: "default" } },
+                  { author: { contains: search, mode: "default" } },
                   ],
               }
-            : undefined,
+                : undefined,
+            orderBy: { publishedDate: "desc" }
         });
 
         res.json(games);
