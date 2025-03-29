@@ -43,7 +43,18 @@ export const getGameById = async (req: Request, res: Response) => {
 
 export const getAllGames = async (req: Request, res: Response) => {
     try {
-        const games = await prisma.game.findMany();
+        const search = req.query.search as string | undefined;
+
+        const games = await prisma.game.findMany({
+            where: search
+            ? {
+                  OR: [
+                  { name: { contains: search, mode: "insensitive" } },
+                  { author: { contains: search, mode: "insensitive" } },
+                  ],
+              }
+            : undefined,
+        });
 
         res.json(games);
     } catch (error) {
