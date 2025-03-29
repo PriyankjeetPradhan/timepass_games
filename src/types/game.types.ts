@@ -4,7 +4,7 @@ export const gameSchema = z.object({
     name: z.string().min(4),
     url: z.string().url(),
     author: z.string().min(4),
-    publishedDate: z.date()
+    publishedDate: z.string().transform((date) => new Date(date)),
 });
 
 export const gameIdSchema = z.object({

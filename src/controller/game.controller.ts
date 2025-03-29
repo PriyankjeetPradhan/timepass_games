@@ -11,12 +11,10 @@ export const createGame = async (req: Request, res: Response) => {
                 name: body.name,
                 url: body.url,
                 author: body.author,
-                publishedDate: new Date(body.publishedDate)
+                publishedDate: body.publishedDate
             }
         });
-        const response = gameResponseSchema.parse(game);
-
-        res.status(201).json(response);
+        res.status(201).json(game);
     } catch (error) {
         res.status(400).json({ error: error });
         
@@ -36,8 +34,7 @@ export const getGameById = async (req: Request, res: Response) => {
         if (!game) {
             res.json({ error: "Game not found" });
         } else {
-            const response = gameResponseSchema.parse(game);
-            res.json(response);
+            res.json(game);
         }
     } catch (error) {
         res.status(400).json({ error: error });
@@ -48,8 +45,7 @@ export const getAllGames = async (req: Request, res: Response) => {
     try {
         const games = await prisma.game.findMany();
 
-        const response = gameListResponseSchema.parse(games);
-        res.json(response);
+        res.json(games);
     } catch (error) {
         res.status(500).json({ error: "Error fetching game" });
     }
@@ -61,7 +57,7 @@ export const updateGame = async (req: Request, res: Response) => {
         const param = gameIdSchema.parse(req.params);
         const body = gameSchema.parse(req.body);
 
-        const updateGame = await prisma.game.update({
+        const updatedGame = await prisma.game.update({
             where: { id: param.id },
             data: {
                 name: body.name,
@@ -71,8 +67,7 @@ export const updateGame = async (req: Request, res: Response) => {
             }
         });
 
-        const response = gameResponseSchema.parse(updateGame);
-        res.json(response);
+        res.json(updatedGame);
     } catch (error) {
         res.status(400).json({ error: error });
     }
